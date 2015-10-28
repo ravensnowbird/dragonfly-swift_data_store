@@ -44,7 +44,8 @@ module Dragonfly
 
     def url_for(uid, options = {})
       object = container.object(uid)
-      URI::HTTP.build(scheme: options[:scheme] || connection.connection.service_scheme,
+      klass = (options[:scheme] || connection.connection.service_scheme) ? URI::HTTPS : URI::HTTP
+      uri = klass.build(scheme: options[:scheme] || connection.connection.service_scheme,
                       host: connection.connection.service_host,
                       path: "#{connection.connection.service_path}/#{object.container.name}/#{object.name}").to_s
     rescue OpenStack::Exception::ItemNotFound
